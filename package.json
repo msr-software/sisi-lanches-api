@@ -1,0 +1,23 @@
+{
+  "name": "sisi-lanches-api",
+  "version": "1.0.0",
+  "description": "api for sisi-lanche",
+  "main": "src/server.ts",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "start": "node build/server.js",
+    "build": "tsup src --out-dir build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Maique Rosa",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "tsup": "^8.0.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "fastify": "^4.25.1"
+  }
+}
