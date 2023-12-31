@@ -12,6 +12,9 @@
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui"
   },
+  "engines": {
+    "node": "18"
+  },
   "author": "Maique Rosa",
   "license": "ISC",
   "devDependencies": {
