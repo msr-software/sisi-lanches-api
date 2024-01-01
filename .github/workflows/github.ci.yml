@@ -11,55 +11,17 @@ jobs:
     environment: production
 
     steps:
-      - name: Clone Project
-        uses: appleboy/ssh-action@v0.1.2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          host: ${{ secrets.SSH_HOST }}
-          key: ${{ secrets.SSH_KEY }}
-          username: ${{secrets.SSH_USER}}
-          script: |
-            folder=$(ls)
-            if echo $folder | grep -c ${{vars.PROJECT_NAME}}; 
-            then 
-              echo "Já existe o projeto clonado"; 
-            else 
-              git clone ${{vars.PROJECT_URL}};
-            fi
+          node-version: 18
+      - run: npm ci
+      - run: npm run build
 
-      - name: Build Project
-        uses: appleboy/ssh-action@v0.1.2
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
-          key: ${{ secrets.SSH_KEY }}
           username: ${{ secrets.SSH_USER }}
-
-          script: |
-            cd ${{vars.PROJECT_NAME}}
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh
-            git checkout main
-            git pull
-            export NODE_ENV=${{vars.NODE_ENV}}
-            export DATABASE_URL=${{secrets.DATABASE_URL}}
-            export JWT_SECRET=${{secrets.JWT_SECRET}}
-            npm install
-            npm run build
-            npx prisma migrate deploy
-
-      - name: Execute Project
-        uses: appleboy/ssh-action@v0.1.2
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          key: ${{ secrets.SSH_KEY }}
-          username: ${{ secrets.SSH_USER }}
-          script: |
-            cd ${{vars.PROJECT_NAME}}
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh
-            pm2status=$(pm2 status)
-            if echo [$pm2status] | grep ${{vars.PROJECT_NAME}}; 
-            then 
-              pm2 reload ${{vars.PROJECT_NAME}}; 
-            else 
-              pm2 start npm --name  ${{vars.PROJECT_NAME}} -- start; 
-            fi
+          source: build/
+          target: .

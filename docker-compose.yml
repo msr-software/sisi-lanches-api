@@ -20,21 +20,6 @@ services:
       - DATABASE_URL="postgresql://master:kayrossxp@sisi-salgados-pg:5432/sisisalgados?schema=public"
     ports:
       - "3333:3333"
-    depends_on:
-      - sisi-salgados-pg
-  
-  sisi-salgados-pg:
-    image: bitnami/postgresql
-    ports:
-      - 5432:5432
-    volumes:
-      - 'sisisalgados_backup:/bitnami/postgresql'
-    networks:
-      - sisi-net
-    environment:
-      - POSTGRESQL_USERNAME=master
-      - POSTGRESQL_PASSWORD=kayrossxp
-      - POSTGRESQL_DATABASE=sisisalgados
 
 volumes:
   sisisalgados_backup:
