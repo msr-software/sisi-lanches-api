@@ -21,8 +21,7 @@ jobs:
             folder=$(ls)
             if echo $folder | grep -c ${{vars.PROJECT_NAME}}; 
             then 
-              cd ${{vars.PROJECT_NAME}}
-              git pull
+              echo "projeto já clonado"
             else 
               git clone ${{vars.PROJECT_URL}};
             fi
@@ -36,9 +35,6 @@ jobs:
 
           script: |
             cd ${{vars.PROJECT_NAME}}
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh
-            git checkout main
             git pull
             export NODE_ENV=${{vars.NODE_ENV}}
             export DATABASE_URL=${{secrets.DATABASE_URL}}
@@ -46,5 +42,16 @@ jobs:
             export DBUSERNAME=${{secrets.DBUSERNAME}}
             export DBPASSWORD=${{secrets.DBPASSWORD}}
             export DATABASE=${{secrets.DATABASE}}
-            docker compose build --force-rm --no-cache --compress
-            docker compose up -d
+            docker compose config
+            docker compose build --force-rm --no-cache
+      
+      - name: DEPLOY Project
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_KEY }}
+          username: ${{ secrets.SSH_USER }}
+          script: | 
+            cd ${{vars.PROJECT_NAME}}
+            docker compose up --no-deps -d
+             
