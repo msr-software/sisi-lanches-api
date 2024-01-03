@@ -38,10 +38,10 @@ jobs:
             git pull
             export NODE_ENV=${{vars.NODE_ENV}}
             export DATABASE_URL=${{secrets.DATABASE_URL}}
-            export JWT_SECRET=${{secrets.JWT_SECRET}}
-            export DBUSERNAME=${{secrets.DBUSERNAME}}
-            export DBPASSWORD=${{secrets.DBPASSWORD}}
-            export DATABASE=${{secrets.DATABASE}}
+            export JWT_SECRET=${{vars.JWT_SECRET}}
+            export DBUSERNAME=${{vars.DBUSERNAME}}
+            export DBPASSWORD=${{vars.DBPASSWORD}}
+            export DATABASE=${{vars.DATABASE}}
             docker compose config
             docker compose build --force-rm --no-cache
       
@@ -53,5 +53,11 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           script: | 
             cd ${{vars.PROJECT_NAME}}
+            export NODE_ENV=${{vars.NODE_ENV}}
+            export DATABASE_URL=${{secrets.DATABASE_URL}}
+            export JWT_SECRET=${{vars.JWT_SECRET}}
+            export DBUSERNAME=${{vars.DBUSERNAME}}
+            export DBPASSWORD=${{vars.DBPASSWORD}}
+            export DATABASE=${{vars.DATABASE}}
             docker compose up --no-deps -d
              
