@@ -5,8 +5,9 @@
   "main": "src/server.ts",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "start": "node build/server.js",
+    "start": "node server.js",
     "build": "tsup src --out-dir build",
+    "prisma:migrations": "npx prisma generate && npx prisma migrate deploy",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

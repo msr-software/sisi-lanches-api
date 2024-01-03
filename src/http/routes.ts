@@ -5,8 +5,11 @@ import { authenticate } from './controllers/authenticate'
 import { profile } from './controllers/profile'
 import { verifyJWT } from './middleware/verify-jwt'
 import { refresh } from './controllers/refresh'
+import { healthCheck } from './controllers/healt-check'
 
 export async function appRoutes(app: FastifyInstance) {
+  app.get('/health', healthCheck)
+
   app.post('/authenticate', authenticate)
   app.post('/users', userRegister)
   app.post('/input', inputCreate)

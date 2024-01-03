@@ -1,2 +1,6 @@
 node_modules
 .env
+build
+.github
+coverage
+postgres_data_container

@@ -1,25 +1,38 @@
-version: '3'
+version: '3.9'
 
 networks:
-  sisi-net:
+  app-tier:
     driver: bridge
-    
-services:    
+
+services:
+  sisi_lanches_db:
+    image: bitnami/postgresql
+    ports:
+      - 5432:5432
+    networks:
+      - app-tier
+    environment:
+      - POSTGRESQL_USERNAME=${DBUSERNAME}
+      - POSTGRESQL_PASSWORD=${DBPASSWORD}
+      - POSTGRESQL_DATABASE=${DATABASE}
+    volumes:
+      - ./postgres_data_container:/bitnami/postgresql
+
   app:
     container_name: sisi-lanches-api
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - /usr/app
     networks:
-      - sisi-net
+      - app-tier
+    depends_on:
+      - sisi_lanches_db
     environment:
-      - NODE_ENV=production
-      - JWT_SECRET=testebalela
-      - DATABASE_URL="postgresql://master:kayrossxp@sisi-salgados-pg:5432/sisisalgados?schema=public"
+      - NODE_ENV=${NODE_ENV}
+      - JWT_SECRET=${JWT_SECRET}
+      - DATABASE_URL=${DATABASE_URL}
     ports:
       - "3333:3333"
 
 volumes:
-  sisisalgados_backup:
+  postgres_data_container:
